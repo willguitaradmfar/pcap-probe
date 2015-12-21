@@ -1,0 +1,29 @@
+web:
+  image: willguitaradmfar/nodejs
+  ports:
+   - "3000:3000"
+  volumes:
+   - ./web:/app
+  links:
+   - redis
+   - mongo
+   - mqtt
+  environment:
+   - MQTT=mqtt
+
+redis:
+  image: redis
+  ports:
+    - "6379:6379"
+
+mongo:
+  image: mongo
+  ports:
+   - "27017:27017"
+  volumes:
+   - /var/lib/mongodb:/data/db
+
+mqtt:
+  image: toke/mosquitto
+  ports:
+    - "1883:1883"

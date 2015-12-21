@@ -1,19 +1,34 @@
 var spawn = require('child_process').spawn;
 
+var fs = require('fs');
+
+var redis = require('redis');
+var clientRedis = redis.createClient(6379, '172.16.84.53');
+clientRedis.on('connect', function() {
+  console.log('Redis connected');
+});
+
 var cmd = spawn('tcpdump', ['-l', '-e', '-i', 'mon0', '-s', '256', 'type', 'mgt', 'subtype', 'probe-req']);
 
-var minusDb = {
+var minusDb = {};
 
-};
-
-var legend = {
-  '14:30:c6:fd:82:9a': 'william'
-};
+var bufferLegend = fs.readFileSync('.legend');
+var legend = JSON.parse(bufferLegend);
 
 setInterval(function() {
-  console.log('=================================');
   for (var mac in minusDb) {
-    console.log(minusDb[mac].num, minusDb[mac].db, legend[mac] || mac);
+    var data = JSON.stringify({
+      num: minusDb[mac].num,
+      mac: mac,
+      name: legend[mac],
+      db: minusDb[mac].db,
+      point: '1',
+    });
+
+    clientRedis.set('1_'+mac, data);
+
+    clientRedis.expire('1_'+mac, 30);
+
     delete minusDb[mac];
   }
 }, 1000);
@@ -27,7 +42,7 @@ cmd.stdout.on('data', function(data) {
 
   var num = s.replace(regex, '$1');
   var db = s.replace(regex, '$2');
-  var mac = s.replace(regex, '$3');  
+  var mac = s.replace(regex, '$3');
 
   if (!minusDb[mac]) {
     minusDb[mac] = {}
