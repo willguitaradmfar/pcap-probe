@@ -10,7 +10,7 @@ module.exports = function(io) {
 
   var redis = require('redis');
 
-  var clientRedis = redis.createClient(6379, '172.16.84.53');
+  var clientRedis = redis.createClient(6379, 'redis');
 
   var multi = clientRedis.multi();
 
@@ -37,8 +37,10 @@ module.exports = function(io) {
             replies[i] = JSON.parse(replies[i])
           }
           socket.emit('list', replies);
-          setTimeout(recursive, 1000);
+
         });
+
+        setTimeout(recursive, 1000);
 
       });
     };
