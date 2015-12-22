@@ -16,29 +16,43 @@
     <thead>
       <tr>
         <th>
-          Num
-        </th>
-        <th>
-          ponto
-        </th>
-        <th>
           Mac
         </th>
         <th>
-          dB
+          Pacote
         </th>
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="i in _list | filter:filter | orderBy:'db'" class="{{i.point == 1 ? 'success' : 'warning'}}">
-        <td ng-bind="i.num"></td>
-        <td ng-bind="i.point"></td>
+      <tr ng-repeat="i in _list | filter:filter | orderBy:'db'">
         <td>
-          <span ng-bind="i.name || i.mac"></span>
-
-          <b>(<small ng-bind="i.mac"></small>)</b>
+            <span ng-bind="i[1].name || i[1].mac"></span>
+            <b>(<small ng-bind="i[1].mac"></small>)</b>
         </td>
-        <td ng-bind="i.db"></td>
+        <td>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>
+                  Point
+                </th>
+                <th>
+                  Date
+                </th>
+                <th>
+                  dB
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="ii in i">
+                <td ng-bind="ii.point"></td>
+                <td ng-bind="ii.dtcreate"></td>
+                <td ng-bind="ii.db"></td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
       </tr>
     </tbody>
   </table>
@@ -47,10 +61,10 @@
   <link rel="stylesheet" href="/javascripts/bootstrap.min.css">
 
   <!-- Optional theme -->
-  <link rel="stylesheet" href="/javascripts/bootstrap-theme.min.css" >
+  <link rel="stylesheet" href="/javascripts/bootstrap-theme.min.css">
 
   <!-- Latest compiled and minified JavaScript -->
-  <script src="/javascripts/bootstrap.min.js" ></script>
+  <script src="/javascripts/bootstrap.min.js"></script>
 
   <script src="/socket.io/socket.io.js" charset="utf-8"></script>
   <script src="/javascripts/jquery-1.11.3.min.js" charset="utf-8"></script>

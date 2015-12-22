@@ -34,7 +34,7 @@ module.exports = function(io) {
 
         multi.exec(function (err, replies) {
           for(var i in replies){
-            replies[i] = JSON.parse(replies[i])
+            replies[i] = JSON.parse(replies[i]);            
           }
           socket.emit('list', replies);
 

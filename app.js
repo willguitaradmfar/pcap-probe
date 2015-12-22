@@ -22,6 +22,8 @@ var legend = JSON.parse(bufferLegend);
 cmd.stdout.on('data', function(data) {
   var s = data.toString();
 
+  console.log(s);
+
   var regex = /^(\d{2}:\d{2}:\d{2}.\d{6}) (\d*)us .* ([-,+]\d{2,3})dB .* SA:(\w{2}:\w{2}:\w{2}:\w{2}:\w{2}:\w{2}) .*\n$/;
 
   if (!regex.test(s)) return;
@@ -31,22 +33,35 @@ cmd.stdout.on('data', function(data) {
   var db = s.replace(regex, '$3');
   var mac = s.replace(regex, '$4');
 
-
-
-  var data = JSON.stringify({
+  var data = {
     num: num,
     mac: mac,
     name: legend[mac],
     db: db,
     time: time,
     point: point,
+  };
+
+  clientRedis.get(mac, function(err, obj) {
+
+    obj = JSON.parse(obj);
+
+    if(!obj)obj = {};
+
+    if(!obj[point])obj[point] = {};
+
+    for(var i in data){
+      obj[point][i] = data[i];
+    }
+
+    if(!obj[point].dtcreate) obj[point].dtcreate = new Date();
+
+    clientRedis.set(mac, JSON.stringify(obj));
+
+    clientRedis.expire(mac, 30);
+
+    console.log(time, mac, db, num, legend[mac] || '');
   });
-
-  clientRedis.set(point+'_' + mac, data);
-
-  clientRedis.expire(point+'_' + mac, 30);
-
-  console.log(time, mac, db, num, legend[mac] || '');
 
 });
 
