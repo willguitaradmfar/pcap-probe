@@ -2,6 +2,10 @@ var spawn = require('child_process').spawn;
 
 var fs = require('fs');
 
+var point = process.argv[2];
+
+console.log('point ', point);
+
 var redis = require('redis');
 var clientRedis = redis.createClient(6379, 'redis');
 clientRedis.on('connect', function() {
@@ -35,12 +39,12 @@ cmd.stdout.on('data', function(data) {
     name: legend[mac],
     db: db,
     time: time,
-    point: '1',
+    point: point,
   });
 
-  clientRedis.set('1_' + mac, data);
+  clientRedis.set(point+'_' + mac, data);
 
-  clientRedis.expire('1_' + mac, 30);
+  clientRedis.expire(point+'_' + mac, 30);
 
   console.log(time, mac, db, num, legend[mac] || '');
 
