@@ -10,9 +10,9 @@
 <body ng-controller="HomeCtrl">
 
   <label for="">Mac</label>
-  <input type="text" name="name" ng-model="filter.mac">
+  <input type="text" name="name" ng-model="filter[1].mac">
 
-  <table class="table">
+  <table class="table table-striped">
     <thead>
       <tr>
         <th>
@@ -24,7 +24,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="i in _list | filter:filter | orderBy:'db'">
+      <tr ng-repeat="i in _list | filter:filter">
         <td>
             <span ng-bind="i[1].name || i[1].mac"></span>
             <b>(<small ng-bind="i[1].mac"></small>)</b>
@@ -33,6 +33,9 @@
           <table class="table">
             <thead>
               <tr>
+                <th>
+                  Num
+                </th>
                 <th>
                   Point
                 </th>
@@ -46,8 +49,9 @@
             </thead>
             <tbody>
               <tr ng-repeat="ii in i">
+                <td ng-bind="ii.num"></td>
                 <td ng-bind="ii.point"></td>
-                <td ng-bind="ii.dtcreate"></td>
+                <td ng-bind="ii.dtcreate | date:'dd/MM HH:mm:ss'"></td>
                 <td ng-bind="ii.db"></td>
               </tr>
             </tbody>
