@@ -27,17 +27,10 @@ cmd.stdout.on('data', function(data) {
   var db = s.replace(regex, '$3');
   var mac = s.replace(regex, '$4');
 
-  if (!minusDb[mac]) {
-    minusDb[mac] = {}
-    minusDb[mac].db = db;
-    minusDb[mac].num = num;
-    minusDb[mac].time = time;
-  }
 
-  // if (minusDb[mac].db > db) minusDb[mac].db = db;
 
   var data = JSON.stringify({
-    num: minusDb[mac].num,
+    num: num,
     mac: mac,
     name: legend[mac],
     db: db,
@@ -49,7 +42,7 @@ cmd.stdout.on('data', function(data) {
 
   clientRedis.expire('1_' + mac, 30);
 
-  console.log(time, mac, db, minusDb[mac].num, legend[mac] || '');
+  console.log(time, mac, db, num, legend[mac] || '');
 
 });
 
