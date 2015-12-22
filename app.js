@@ -3,7 +3,7 @@ var spawn = require('child_process').spawn;
 var fs = require('fs');
 
 var redis = require('redis');
-var clientRedis = redis.createClient(6379, 'localhost');
+var clientRedis = redis.createClient(6379, 'redis');
 clientRedis.on('connect', function() {
   console.log('Redis connected');
 });
